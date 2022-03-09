@@ -1,0 +1,30 @@
+platform :ios do    
+  desc 'Fetch certificates and provisioning profiles'
+  lane :certificates do
+    match(app_identifier: 'com.FLRN2022.com')
+  end
+
+   desc 'Fetch certificates. Build the iOS application.'
+   lane :build do
+   certificates
+   gym(
+    scheme: "FastlaneDemoRN",
+    workspace: './ios/FastlaneDemoRN.xcworkspace',
+    # project: './ios/FastlaneDemoRN.xcodeproj', # Use this command if you don't have an  iOS .xcworkspace file.
+    export_method: 'development'
+  )
+ end
+
+desc 'Fetch certificates, build and upload to App Center.'
+lane :beta do
+  build
+  appcenter_upload(
+    api_token: ENV["6f21974006a6b082acb788e1b82a2d68c19c8b13"],
+    owner_name: ENV["naveeniostechnocrat-gmail.com"],
+    app_name: ENV["FLRNDemo"],
+    ipa: ENV["APPCENTER_DISTRIBUTE_IPA"]
+  )
+end
+
+
+end
